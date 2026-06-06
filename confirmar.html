@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirmar reserva — Mago Kike</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600;700&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --dorado: #D4AF37; --crema: #FAFAF8; --negro: #1a1a1a; --gris: #666; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background: var(--crema); color: var(--negro); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 40px 20px; }
+    .mk-card { background: #fff; border: 1px solid rgba(212,175,55,0.25); padding: 48px 40px; max-width: 480px; width: 100%; text-align: center; }
+    .mk-simbolo { font-size: 2rem; color: var(--dorado); margin-bottom: 16px; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--negro); margin-bottom: 12px; }
+    .mk-info { font-size: 15px; color: var(--gris); line-height: 1.7; margin-bottom: 8px; }
+    .mk-precio { font-size: 13px; color: var(--gris); margin-bottom: 28px; }
+    .mk-btn-whatsapp { display: block; background: #25D366; color: #fff; font-family: 'Jost', sans-serif; font-size: 14px; font-weight: 500; padding: 14px 32px; text-decoration: none; width: 100%; text-align: center; }
+    .mk-btn-whatsapp:hover { background: #1ebe5d; }
+    .mk-footer { margin-top: 36px; font-size: 12px; color: #bbb; }
+    .mk-error { color: #c0392b; font-size: 15px; }
+    .mk-loading { color: var(--gris); font-size: 15px; }
+  </style>
+</head>
+<body>
+  <div class="mk-card" id="contenido">
+    <p class="mk-loading">Confirmando reserva...</p>
+  </div>
+  <script>
+    const SUPABASE_FUNCTION_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co/functions/v1/confirmar-reserva';
+    async function confirmar() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const contenido = document.getElementById('contenido');
+      if (!id) { contenido.innerHTML = '<p class="mk-error">ID de reserva no encontrado.</p>'; return; }
+      try {
+        const res = await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}`);
+        const data = await res.json();
+        if (!res.ok || data.error) { contenido.innerHTML = '<p class="mk-error">Error al confirmar. Puede que ya estuviera confirmada.</p>'; return; }
+        const { nombre, fecha, hora_inicio, tipo_show, duracion, precio_total, telefono } = data;
+        const anticipo = Math.round(precio_total * 0.4);
+        const [y, m, d] = fecha.split('-');
+        const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+        const fechaFmt = `${d} de ${MESES[parseInt(m)-1]} de ${y}`;
+        const tel = (telefono || '').replace(/[\s\+\-\(\)]/g, '');
+        const msg = encodeURIComponent(`Hola ${nombre}, tu show con Mago Kike esta pre-confirmado!\n\nFecha: ${fechaFmt}\nHora: ${hora_inicio}\nShow: ${tipo_show}\nDuracion: ${duracion} minutos\nPrecio total: $${precio_total}\nAnticipo a pagar (40%): $${anticipo}\n\nEl anticipo no es reembolsable en caso de cancelacion.\n\nEscribeme para coordinar el pago del anticipo y confirmar tu fecha.`);
+        const whatsappURL = `https://wa.me/${tel}?text=${msg}`;
+        contenido.innerHTML = `
+          <div class="mk-simbolo">✦</div>
+          <h1>Reserva confirmada</h1>
+          <p class="mk-info">La reserva de <strong>${nombre}</strong><br/>para el <strong>${fechaFmt}</strong> ha sido confirmada.</p>
+          <p class="mk-precio">Precio total: $${precio_total} &nbsp;·&nbsp; Anticipo: $${anticipo}</p>
+          <a href="${whatsappURL}" target="_blank" class="mk-btn-whatsapp">Notificar al cliente por WhatsApp</a>
+          <p class="mk-footer">Mago Kike · El Salvador</p>
+        `;
+      } catch (err) {
+        contenido.innerHTML = '<p class="mk-error">Error de conexion. Intenta de nuevo.</p>';
+      }
+    }
+    confirmar();
+  </script>
+</body>
+</html>
