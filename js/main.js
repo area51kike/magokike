@@ -47,6 +47,30 @@ function preseleccionarShow(tipo) {
 
   const OCUPADOS = [];
 
+  async function cargarFechasOcupadas() {
+    const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
+    try {
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/reservas?estado=eq.confirmado&select=fecha',
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+        }
+      );
+      const data = await res.json();
+      data.forEach(r => {
+        if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
+      });
+      renderCal();
+    } catch (err) {
+      console.error('Error cargando fechas ocupadas:', err);
+    }
+  }
+
+
   const PRECIOS = {
     cerca:    { 30: 40, 45: 60, 60: 80, 90: 130 },
     escenico: { 30: 50, 45: 70, 60: 90, 90: 130 },
@@ -240,10 +264,10 @@ function preseleccionarShow(tipo) {
       dot.classList.toggle('active', i < n);
     });
   }
-
-  renderCal();
+cargarFechasOcupadas();
+  
 })();
-
+ 
 /* ============================================================
    TESTIMONIOS — Supabase
    ============================================================ */
