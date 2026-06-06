@@ -161,19 +161,10 @@ function preseleccionarShow(tipo) {
     setTimeout(() => {
       document.getElementById('paso2').classList.remove('d-none');
       document.getElementById('paso2').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-      actualizarPrecio();
       setDot(2);
     }, 200);
   }
 
-  function actualizarPrecio() {
-    const tipo = document.getElementById('tipoShow').value;
-    const dur  = parseInt(document.getElementById('duracion').value);
-    document.getElementById('precioVal').textContent = '$' + PRECIOS[tipo][dur];
-  }
-
-  document.getElementById('tipoShow').addEventListener('change', actualizarPrecio);
-  document.getElementById('duracion').addEventListener('change', actualizarPrecio);
 
   document.getElementById('btnPaso3').addEventListener('click', () => {
     const paso3 = document.getElementById('paso3');
@@ -221,7 +212,6 @@ function preseleccionarShow(tipo) {
        <strong>Show:</strong> ${tipo}<br>
        <strong>Duración:</strong> ${dur}<br>
        <strong>Hora de inicio:</strong> ${selectedHora}<br>
-       <strong>Precio estimado:</strong> ${precio}`;
     document.getElementById('formularioReserva').style.display = 'block';
   }
 
@@ -243,9 +233,6 @@ function preseleccionarShow(tipo) {
     const durEl     = document.getElementById('duracion');
     const tipo      = tipoEl.value;
     const duracion  = parseInt(durEl.value);
-    const precioStr = document.getElementById('precioVal').textContent.replace('$','');
-    const precio    = parseInt(precioStr);
-    const anticipo  = Math.round(precio * 0.4);
 
     const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
     const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
@@ -264,8 +251,8 @@ function preseleccionarShow(tipo) {
           hora_inicio: selectedHora,
           tipo_show: tipo,
           duracion,
-          precio_total: precio,
-          anticipo,
+          precio_total: 0,
+          anticipo: 0,
           estado: 'pendiente'
         })
       });
