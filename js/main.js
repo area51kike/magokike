@@ -204,14 +204,13 @@ function preseleccionarShow(tipo) {
     const durEl  = document.getElementById('duracion');
     const tipo   = tipoEl.options[tipoEl.selectedIndex].text;
     const dur    = durEl.options[durEl.selectedIndex].text;
-    const precio = document.getElementById('precioVal').textContent;
     const [y,m,d] = selectedDate.split('-');
     const fechaFmt = d + ' de ' + MESES[parseInt(m)-1] + ' de ' + y;
     document.getElementById('resumen').innerHTML =
       `<strong>Fecha:</strong> ${fechaFmt}<br>
        <strong>Show:</strong> ${tipo}<br>
        <strong>Duración:</strong> ${dur}<br>
-       <strong>Hora de inicio:</strong> ${selectedHora}<br>
+       <strong>Hora de inicio:</strong> ${selectedHora}`;
     document.getElementById('formularioReserva').style.display = 'block';
   }
 
