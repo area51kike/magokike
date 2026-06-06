@@ -2,6 +2,10 @@
 // MAGO KIKE — main.js
 // ============================================================
 
+// --- Configuración Supabase (compartida por todos los módulos) ---
+const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
+
 // --- Navbar: sombra al hacer scroll ---
 window.addEventListener('scroll', () => {
   const navbar = document.querySelector('.mk-navbar');
@@ -81,8 +85,6 @@ function preseleccionarShow(tipo) {
   }
 
   async function cargarFechasOcupadas() {
-    const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
     try {
       const res = await fetch(
         SUPABASE_URL + '/rest/v1/reservas?or=(estado.eq.confirmado,estado.eq.confirmado_mago)&select=fecha,hora_inicio,duracion',
@@ -233,9 +235,6 @@ function preseleccionarShow(tipo) {
     const tipo      = tipoEl.value;
     const duracion  = parseInt(durEl.value);
 
-    const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
-
     try {
       const res = await fetch(SUPABASE_URL + '/rest/v1/reservas', {
         method: 'POST',
@@ -297,8 +296,6 @@ function preseleccionarShow(tipo) {
    ============================================================ */
 (function () {
 
-  const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
-  const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
   const HEADERS = {
     'Content-Type': 'application/json',
     'apikey': SUPABASE_KEY,

@@ -886,3 +886,12 @@ body {
     font-size: 2.2rem;
   }
 }
+/* === Clases extraídas de inline styles === */
+.mk-price-consulta {
+  font-size: 1.3rem;
+}
+
+.mk-card-text--light,
+.mk-feature-list--light {
+  color: #ccc;
+}
