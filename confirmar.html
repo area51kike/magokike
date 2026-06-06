@@ -181,13 +181,16 @@
         const tipoFmt = tipo_show === 'cerca' ? 'Magia de cerca' : 'Show escénico';
 
         const tel = limpiarTelefono(telefono || '');
+       const notaEscenico = tipo_show === 'escenico'
+          ? `\n\nNota: Te recomiendo programar el show después de que los invitados hayan comido, así el espectáculo fluye sin interrupciones.`
+          : '';
+
         const msg = encodeURIComponent(
-          `Hola ${nombre}, tu show con Mago Kike esta pre-confirmado!\n\n` +
-          `Fecha: ${fechaFmt}\n` +
-          `Hora: ${hora_inicio}\n` +
-          `Show: ${tipoFmt}\n` +
-          `Duracion: ${duracion} minutos\n\n` +
-          `Escribeme para coordinar los detalles y confirmar tu fecha.`
+          `Hola ${nombre}, confirmo tu reserva con Mago Kike.\n\n` +
+          `📅 ${fechaFmt} · ${hora_inicio}\n` +
+          `🎩 ${tipoFmt} · ${duracion} min` +
+          `${notaEscenico}\n\n` +
+          `Escríbeme cuando quieras para coordinar todo. ¡Va a ser un show increíble!`
         );
         const whatsappURL = `https://wa.me/${tel}?text=${msg}`;
 
