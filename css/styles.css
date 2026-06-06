@@ -747,7 +747,14 @@ body {
   color: #fff;
   border-color: var(--dorado);
 }
-
+.mk-card-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3.5rem;
+  font-weight: 700;
+  color: rgba(212,175,55,0.15);
+  line-height: 1;
+  margin-bottom: 8px;
+}
 /* Resumen */
 .mk-resumen {
   border: 1px solid rgba(212,175,55,0.2);
