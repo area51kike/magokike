@@ -167,8 +167,7 @@ function preseleccionarShow(tipo) {
   document.getElementById('btnEnviarReserva').addEventListener('click', async () => {
     const nombre   = document.getElementById('rNombre').value.trim();
     const email    = document.getElementById('rEmail').value.trim();
-    const telefono = document.getElementById('rTelefono').value.trim();
-
+    const telefono = '+503' + document.getElementById('rTelefono').value.replace(/\D/g, '').slice(0, 8);
     if (!nombre || !email || !telefono) {
       alert('Por favor completa tu nombre, correo y teléfono.');
       return;

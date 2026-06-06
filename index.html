@@ -363,7 +363,16 @@
       </div>
       <div class="col-12">
         <label class="mk-form-label">Tu teléfono</label>
-        <input type="text" class="form-control mk-input" id="rTelefono" placeholder="+503 7000 0000" />
+        <div class="d-flex">
+          <span class="mk-input d-flex align-items-center px-3" 
+                style="border-right:none;background:#f5f5f5!important;color:var(--gris);font-size:14px;white-space:nowrap;">
+            +503
+          </span>
+          <input type="tel" class="form-control mk-input" id="rTelefono" 
+                 placeholder="7000 0000" maxlength="9"
+                 style="border-left:none;" />
+        </div>
+        <small style="font-size:11px;color:var(--gris);">Solo El Salvador · 8 dígitos</small>
       </div>
     </div>
     <div class="mk-resumen mb-3" id="resumen"></div>
