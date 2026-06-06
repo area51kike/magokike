@@ -46,30 +46,7 @@ function preseleccionarShow(tipo) {
 (function () {
 
   const OCUPADOS = [];
-
-  async function cargarFechasOcupadas() {
-    const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
-    const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
-    try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/reservas?estado=eq.confirmado&select=fecha',
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-            'Authorization': 'Bearer ' + SUPABASE_KEY
-          }
-        }
-      );
-      const data = await res.json();
-      data.forEach(r => {
-        if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
-      });
-      renderCal();
-    } catch (err) {
-      console.error('Error cargando fechas ocupadas:', err);
-    }
-  }
-
+  const HORAS_OCUPADAS = {};
 
   const PRECIOS = {
     cerca:    { 30: 40, 45: 60, 60: 80, 90: 130 },
@@ -94,6 +71,55 @@ function preseleccionarShow(tipo) {
 
   viewYear  = today.getFullYear();
   viewMonth = today.getMonth();
+
+  function horaAMinutos(h) {
+    const [time, period] = h.split(' ');
+    let [hh, mm] = time.split(':').map(Number);
+    if (period === 'PM' && hh !== 12) hh += 12;
+    if (period === 'AM' && hh === 12) hh = 0;
+    return hh * 60 + mm;
+  }
+
+  async function cargarFechasOcupadas() {
+    const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
+    try {
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/reservas?or=(estado.eq.confirmado,estado.eq.confirmado_mago)&select=fecha,hora_inicio,duracion',
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY
+          }
+        }
+      );
+      const data = await res.json();
+
+      data.forEach(r => {
+        if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
+
+        const inicioMin      = horaAMinutos(r.hora_inicio);
+        const finMin         = inicioMin + parseInt(r.duracion);
+        const bloqueadoDesde = inicioMin - 120;
+        const bloqueadoHasta = finMin + 120;
+
+        if (!HORAS_OCUPADAS[r.fecha]) HORAS_OCUPADAS[r.fecha] = [];
+
+        HORAS.forEach(h => {
+          const hMin = horaAMinutos(h);
+          if (hMin >= bloqueadoDesde && hMin < bloqueadoHasta) {
+            if (!HORAS_OCUPADAS[r.fecha].includes(h)) {
+              HORAS_OCUPADAS[r.fecha].push(h);
+            }
+          }
+        });
+      });
+
+      renderCal();
+    } catch (err) {
+      console.error('Error cargando fechas ocupadas:', err);
+    }
+  }
 
   function renderCal() {
     document.getElementById('calMes').textContent = MESES[viewMonth] + ' ' + viewYear;
@@ -157,16 +183,24 @@ function preseleccionarShow(tipo) {
   function renderHoras() {
     const grid = document.getElementById('horasGrid');
     grid.innerHTML = '';
+    const horasBloqueadas = HORAS_OCUPADAS[selectedDate] || [];
     HORAS.forEach(h => {
       const btn = document.createElement('button');
       btn.className = 'mk-hora-btn';
       btn.textContent = h;
-      btn.addEventListener('click', () => {
-        document.querySelectorAll('.mk-hora-btn.selected').forEach(el => el.classList.remove('selected'));
-        btn.classList.add('selected');
-        selectedHora = h;
-        renderResumen();
-      });
+      if (horasBloqueadas.includes(h)) {
+        btn.disabled = true;
+        btn.style.opacity = '0.35';
+        btn.style.cursor = 'not-allowed';
+        btn.title = 'Hora no disponible';
+      } else {
+        btn.addEventListener('click', () => {
+          document.querySelectorAll('.mk-hora-btn.selected').forEach(el => el.classList.remove('selected'));
+          btn.classList.add('selected');
+          selectedHora = h;
+          renderResumen();
+        });
+      }
       grid.appendChild(btn);
     });
   }
@@ -192,6 +226,7 @@ function preseleccionarShow(tipo) {
     const nombre   = document.getElementById('rNombre').value.trim();
     const email    = document.getElementById('rEmail').value.trim();
     const telefono = '+503' + document.getElementById('rTelefono').value.replace(/\D/g, '').slice(0, 8);
+
     if (!nombre || !email || !telefono) {
       alert('Por favor completa tu nombre, correo y teléfono.');
       return;
@@ -264,10 +299,10 @@ function preseleccionarShow(tipo) {
       dot.classList.toggle('active', i < n);
     });
   }
-cargarFechasOcupadas();
-  
+
+  cargarFechasOcupadas();
 })();
- 
+
 /* ============================================================
    TESTIMONIOS — Supabase
    ============================================================ */
@@ -284,7 +319,6 @@ cargarFechasOcupadas();
   const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
                  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
-  // ── Cargar testimonios aprobados ──
   async function cargarTestimonios() {
     try {
       const res  = await fetch(
@@ -328,7 +362,6 @@ cargarFechasOcupadas();
     }
   }
 
-  // ── Selector de estrellas ──
   let calificacionSeleccionada = 0;
   const stars = document.querySelectorAll('.mk-star-pick');
 
@@ -350,7 +383,6 @@ cargarFechasOcupadas();
     stars.forEach((s, i) => s.classList.toggle('active', i < val));
   }
 
-  // ── Enviar testimonio ──
   document.getElementById('btnEnviarTestimonio').addEventListener('click', async () => {
     const nombre    = document.getElementById('tNombre').value.trim();
     const evento    = document.getElementById('tEvento').value;
