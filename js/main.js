@@ -96,8 +96,6 @@ function preseleccionarShow(tipo) {
       const data = await res.json();
 
       data.forEach(r => {
-        if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
-
         const inicioMin      = horaAMinutos(r.hora_inicio);
         const finMin         = inicioMin + parseInt(r.duracion);
         const bloqueadoDesde = inicioMin - 120;
@@ -113,6 +111,11 @@ function preseleccionarShow(tipo) {
             }
           }
         });
+
+        // Bloquear fecha completa solo si todas las horas están ocupadas
+        if (HORAS_OCUPADAS[r.fecha].length >= HORAS.length) {
+          if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
+        }
       });
 
       renderCal();
