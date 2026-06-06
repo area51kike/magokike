@@ -31,6 +31,19 @@
     const SUPABASE_FUNCTION_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co/functions/v1/confirmar-reserva';
     const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcHptZHdka3BlYmF4dndjaXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MTYzNjEsImV4cCI6MjA5NjI5MjM2MX0.n-KhXSGaMINWxo7yh5HZyNZevA7lCvKV65QhROGopkI';
 
+    function limpiarTelefono(tel) {
+      // Quitar todo excepto dígitos
+      let digits = tel.replace(/\D/g, '');
+      // Si empieza con 503 y tiene 11 dígitos, está bien
+      if (digits.startsWith('503') && digits.length === 11) return digits;
+      // Si empieza con 0 quitarlo
+      if (digits.startsWith('0')) digits = digits.slice(1);
+      // Si tiene 8 dígitos (número local), agregar 503
+      if (digits.length === 8) return '503' + digits;
+      // Si ya tiene código de país de otro país, dejarlo
+      return digits;
+    }
+
     async function confirmar() {
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
@@ -50,7 +63,7 @@
         const [y, m, d] = fecha.split('-');
         const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
         const fechaFmt = `${d} de ${MESES[parseInt(m)-1]} de ${y}`;
-        const tel = (telefono || '').replace(/[\s\+\-\(\)]/g, '');
+        const tel = limpiarTelefono(telefono || '');
         const msg = encodeURIComponent(`Hola ${nombre}, tu show con Mago Kike esta pre-confirmado!\n\nFecha: ${fechaFmt}\nHora: ${hora_inicio}\nShow: ${tipo_show}\nDuracion: ${duracion} minutos\nPrecio total: $${precio_total}\nAnticipo a pagar (40%): $${anticipo}\n\nEl anticipo no es reembolsable en caso de cancelacion.\n\nEscribeme para coordinar el pago del anticipo y confirmar tu fecha.`);
         const whatsappURL = `https://wa.me/${tel}?text=${msg}`;
         contenido.innerHTML = `
