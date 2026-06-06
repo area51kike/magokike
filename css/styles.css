@@ -895,3 +895,69 @@ body {
 .mk-feature-list--light {
   color: #ccc;
 }
+
+/* === Validación de campos === */
+.mk-input-error {
+  border-color: #e74c3c !important;
+  box-shadow: 0 0 0 2px rgba(231,76,60,0.15) !important;
+}
+.mk-input-ok {
+  border-color: #27ae60 !important;
+  box-shadow: 0 0 0 2px rgba(39,174,96,0.12) !important;
+}
+
+/* === Bloque de éxito post-reserva === */
+.mk-exito {
+  text-align: center;
+  padding: 48px 24px;
+  animation: mkExitoFadeIn 0.6s ease forwards;
+}
+.mk-exito-simbolo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  color: var(--dorado);
+  animation: mkSimboloScale 0.5s ease forwards;
+  display: block;
+  margin-bottom: 16px;
+}
+.mk-exito-titulo {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 16px;
+}
+.mk-exito-divider {
+  width: 40px;
+  height: 1px;
+  background: var(--dorado);
+  margin: 0 auto 20px;
+}
+.mk-exito-texto {
+  font-size: 15px;
+  color: var(--gris);
+  line-height: 1.8;
+  margin-bottom: 8px;
+}
+.mk-exito-texto strong { color: var(--negro); font-weight: 500; }
+.mk-exito-sub {
+  font-size: 12px;
+  color: #aaa;
+  letter-spacing: 0.05em;
+}
+
+/* === Animaciones === */
+@keyframes mkExitoFadeIn {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes mkSimboloScale {
+  0%   { transform: scale(0.5) rotate(-15deg); opacity: 0; }
+  70%  { transform: scale(1.2) rotate(5deg); opacity: 1; }
+  100% { transform: scale(1) rotate(0deg); }
+}
+@keyframes mkEstrellaAnim {
+  0%   { opacity: 0; transform: translateY(0) scale(0.5); }
+  50%  { opacity: 1; }
+  100% { opacity: 0; transform: translateY(-60px) scale(1.2); }
+}

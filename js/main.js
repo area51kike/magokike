@@ -216,27 +216,96 @@ function preseleccionarShow(tipo) {
        <strong>Show:</strong> ${tipo}<br>
        <strong>Duración:</strong> ${dur}<br>
        <strong>Hora de inicio:</strong> ${selectedHora}`;
-    document.getElementById('formularioReserva').style.display = 'block';
+    const formReserva = document.getElementById('formularioReserva');
+    formReserva.style.display = 'block';
+    setTimeout(() => formReserva.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
   }
 
-  document.getElementById('btnEnviarReserva').addEventListener('click', async () => {
-    const nombre   = document.getElementById('rNombre').value.trim();
-    const email    = document.getElementById('rEmail').value.trim();
-    const telefono = '+503' + document.getElementById('rTelefono').value.replace(/\D/g, '').slice(0, 8);
+  // --- Guardamos nombre para animación ---
+  let nombreGuardado = '';
+  document.getElementById('rNombre').addEventListener('input', () => {
+    nombreGuardado = document.getElementById('rNombre').value.trim().split(' ')[0];
+  });
 
-    if (!nombre || !email || !telefono) {
-      alert('Por favor completa tu nombre, correo y teléfono.');
-      return;
+  // --- Helpers de validación visual por campo ---
+  function setFieldError(fieldId, msg) {
+    const el = document.getElementById(fieldId);
+    el.classList.remove('mk-input-ok');
+    el.classList.add('mk-input-error');
+    let hint = el.closest('.col-12, div').querySelector('.mk-field-hint');
+    if (!hint) {
+      hint = document.createElement('small');
+      hint.className = 'mk-field-hint';
+      el.parentElement.appendChild(hint);
     }
+    hint.textContent = msg;
+    hint.style.cssText = 'color:#e74c3c;font-size:11px;display:block;margin-top:4px;';
+  }
+  function clearFieldError(fieldId) {
+    const el = document.getElementById(fieldId);
+    el.classList.remove('mk-input-error');
+    const hint = el.parentElement.querySelector('.mk-field-hint');
+    if (hint) hint.style.display = 'none';
+  }
+  function setFieldOk(fieldId) {
+    const el = document.getElementById(fieldId);
+    el.classList.remove('mk-input-error');
+    el.classList.add('mk-input-ok');
+    const hint = el.parentElement.querySelector('.mk-field-hint');
+    if (hint) hint.style.display = 'none';
+  }
+  function validarNombre() {
+    const val = document.getElementById('rNombre').value.trim();
+    const palabras = val.split(/\s+/).filter(p => p.length > 0);
+    const soloLetras = /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/.test(val);
+    if (!val)            { setFieldError('rNombre', 'Por favor ingresa tu nombre.'); return false; }
+    if (!soloLetras)     { setFieldError('rNombre', 'Solo letras, sin números ni símbolos.'); return false; }
+    if (palabras.length < 2) { setFieldError('rNombre', 'Ingresa nombre y apellido.'); return false; }
+    setFieldOk('rNombre'); return true;
+  }
+  function validarEmail() {
+    const val = document.getElementById('rEmail').value.trim();
+    const ok  = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val);
+    if (!val)  { setFieldError('rEmail', 'Por favor ingresa tu correo.'); return false; }
+    if (!ok)   { setFieldError('rEmail', 'Formato inválido. Ej: maria@gmail.com'); return false; }
+    setFieldOk('rEmail'); return true;
+  }
+  function validarTelefono() {
+    const val = document.getElementById('rTelefono').value.replace(/\D/g, '');
+    if (!val)          { setFieldError('rTelefono', 'Por favor ingresa tu teléfono.'); return false; }
+    if (val.length !== 8) { setFieldError('rTelefono', 'Deben ser exactamente 8 dígitos.'); return false; }
+    setFieldOk('rTelefono'); return true;
+  }
+
+  // Validar al salir del campo y limpiar al escribir
+  document.getElementById('rNombre').addEventListener('blur', validarNombre);
+  document.getElementById('rEmail').addEventListener('blur', validarEmail);
+  document.getElementById('rTelefono').addEventListener('blur', validarTelefono);
+  ['rNombre','rEmail','rTelefono'].forEach(id =>
+    document.getElementById(id).addEventListener('input', () => clearFieldError(id))
+  );
+
+  document.getElementById('btnEnviarReserva').addEventListener('click', async () => {
+    const okNombre   = validarNombre();
+    const okEmail    = validarEmail();
+    const okTelefono = validarTelefono();
+    if (!okNombre || !okEmail || !okTelefono) return;
     if (!selectedDate || !selectedHora) {
       alert('Por favor selecciona una fecha y hora.');
       return;
     }
 
-    const tipoEl    = document.getElementById('tipoShow');
-    const durEl     = document.getElementById('duracion');
-    const tipo      = tipoEl.value;
-    const duracion  = parseInt(durEl.value);
+    const nombre   = document.getElementById('rNombre').value.trim();
+    const email    = document.getElementById('rEmail').value.trim();
+    const telefono = '+503' + document.getElementById('rTelefono').value.replace(/\D/g, '').slice(0, 8);
+    const tipoEl   = document.getElementById('tipoShow');
+    const durEl    = document.getElementById('duracion');
+    const tipo     = tipoEl.value;
+    const duracion = parseInt(durEl.value);
+
+    const btn = document.getElementById('btnEnviarReserva');
+    btn.disabled    = true;
+    btn.textContent = 'Enviando...';
 
     try {
       const res = await fetch(SUPABASE_URL + '/rest/v1/reservas', {
@@ -259,19 +328,61 @@ function preseleccionarShow(tipo) {
       });
 
       if (res.ok || res.status === 201) {
-        document.getElementById('btnEnviarReserva').disabled = true;
-        document.getElementById('rNombre').value = '';
-        document.getElementById('rEmail').value  = '';
+        document.getElementById('rNombre').value   = '';
+        document.getElementById('rEmail').value    = '';
         document.getElementById('rTelefono').value = '';
-        document.getElementById('rFeedback').style.display = 'block';
+        mostrarExito(nombre.split(' ')[0]);
       } else {
+        btn.disabled    = false;
+        btn.textContent = 'Enviar solicitud de reserva';
         alert('Hubo un error al enviar. Intenta de nuevo.');
       }
     } catch (err) {
       console.error('Error enviando reserva:', err);
+      btn.disabled    = false;
+      btn.textContent = 'Enviar solicitud de reserva';
       alert('Hubo un error de conexión.');
     }
   });
+
+  function mostrarExito(primerNombre) {
+    const formulario = document.getElementById('formularioReserva');
+    formulario.innerHTML = `
+      <div class="mk-exito" id="mkExito">
+        <div class="mk-exito-simbolo">✦</div>
+        <h3 class="mk-exito-titulo">¡Solicitud enviada!</h3>
+        <div class="mk-exito-divider"></div>
+        <p class="mk-exito-texto">Gracias <strong>${primerNombre}</strong>, te enviaré un correo para confirmar tu reserva pronto.</p>
+        <p class="mk-exito-sub">Revisa también tu bandeja de spam.</p>
+      </div>`;
+    document.getElementById('mkExito').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    lanzarEstrellas();
+  }
+
+  function lanzarEstrellas() {
+    const contenedor = document.getElementById('mkExito');
+    contenedor.style.position = 'relative';
+    contenedor.style.overflow = 'hidden';
+    const simbolos = ['✦','✧','★','✶','✸'];
+    const colores  = ['#D4AF37','#fff','#C9A84C','#f5e6a3'];
+    for (let i = 0; i < 20; i++) {
+      const s = document.createElement('span');
+      s.className   = 'mk-estrella-confeti';
+      s.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+      s.style.cssText = `
+        position:absolute;
+        left:${Math.random()*100}%;
+        top:${10 + Math.random()*80}%;
+        font-size:${10 + Math.random()*20}px;
+        color:${colores[Math.floor(Math.random()*colores.length)]};
+        opacity:0;
+        pointer-events:none;
+        animation:mkEstrellaAnim ${0.5 + Math.random()*1.2}s ease forwards;
+        animation-delay:${Math.random()*0.6}s;
+      `;
+      contenedor.appendChild(s);
+    }
+  }
 
   document.getElementById('calPrev').addEventListener('click', () => {
     viewMonth--;
