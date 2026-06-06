@@ -1,0 +1,874 @@
+/* ============================================================
+   MAGO KIKE — styles.css
+   Bootstrap 5 + estilos personalizados
+   ============================================================ */
+
+/* === VARIABLES === */
+:root {
+  --dorado: #D4AF37;
+  --dorado-oscuro: #C9A84C;
+  --crema: #FAFAF8;
+  --negro: #1a1a1a;
+  --gris: #666;
+}
+
+/* === BASE === */
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Jost', sans-serif;
+  background: var(--crema);
+  color: var(--negro);
+}
+
+/* === NAVBAR === */
+.mk-navbar {
+  background: rgba(250, 250, 248, 0.97) !important;
+  backdrop-filter: blur(10px);
+  border-bottom: 1px solid rgba(212, 175, 55, 0.2);
+  padding: 16px 0;
+  transition: box-shadow 0.3s;
+}
+
+.mk-navbar.scrolled {
+  box-shadow: 0 4px 20px rgba(0,0,0,0.07);
+}
+
+.mk-brand {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--negro) !important;
+  letter-spacing: 0.05em;
+  text-decoration: none;
+}
+
+.mk-link {
+  font-size: 11px !important;
+  letter-spacing: 0.15em !important;
+  text-transform: uppercase !important;
+  color: var(--negro) !important;
+  font-weight: 500 !important;
+  transition: color 0.2s !important;
+  padding: 8px 4px !important;
+}
+
+.mk-link:hover { color: var(--dorado) !important; }
+
+.mk-toggler {
+  border: 1px solid rgba(212,175,55,0.4) !important;
+  border-radius: 0 !important;
+}
+
+/* === HERO === */
+.mk-hero {
+  min-height: 100vh;
+  background: url('../img/DSC06536.JPG') center/cover no-repeat;
+  /* Mientras no tengas foto, muestra un fondo oscuro elegante: */
+  background-color: #111;
+  position: relative;
+}
+
+.mk-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(10, 10, 10, 0.62);
+}
+
+.mk-hero-label {
+  font-size: 11px;
+  letter-spacing: 0.35em;
+  text-transform: uppercase;
+  color: var(--dorado);
+  margin-bottom: 16px;
+}
+
+.mk-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(3rem, 8vw, 6.5rem);
+  font-weight: 700;
+  line-height: 1.05;
+  color: #fff;
+  margin-bottom: 0;
+}
+
+/* === BOTONES === */
+.mk-btn-outline {
+  border: 1.5px solid var(--dorado);
+  color: var(--dorado);
+  font-family: 'Jost', sans-serif;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  padding: 13px 36px;
+  border-radius: 0;
+  transition: background 0.3s, color 0.3s;
+  text-decoration: none;
+}
+
+.mk-btn-outline:hover {
+  background: var(--dorado);
+  color: #fff;
+  border-color: var(--dorado);
+}
+
+.mk-btn-gold {
+  background: var(--dorado);
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 13px 28px;
+  border-radius: 0;
+  border: none;
+  transition: background 0.2s, transform 0.2s;
+  text-decoration: none;
+  display: inline-block;
+}
+
+.mk-btn-gold:hover {
+  background: var(--dorado-oscuro);
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.mk-btn-whatsapp {
+  background: #25D366;
+  color: #fff;
+  font-family: 'Jost', sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  padding: 14px 28px;
+  border-radius: 0;
+  border: none;
+  text-decoration: none;
+  transition: background 0.2s, transform 0.2s;
+  display: inline-block;
+  text-align: center;
+}
+
+.mk-btn-whatsapp:hover {
+  background: #1ebe5d;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* === SECCIONES HELPERS === */
+.mk-section-crema { background: var(--crema); }
+
+.mk-label {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+  color: var(--dorado-oscuro);
+  margin-bottom: 10px;
+}
+
+.mk-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(2rem, 4vw, 3rem);
+  font-weight: 600;
+  color: var(--negro);
+  margin-bottom: 0;
+}
+
+.mk-subtitle {
+  color: var(--gris);
+  font-size: 15px;
+  margin-top: 12px;
+}
+
+/* === TIMELINE === */
+.mk-timeline-item {
+  border-left: 1px solid rgba(212, 175, 55, 0.3);
+  padding-left: 28px;
+  position: relative;
+}
+
+.mk-timeline-item::before {
+  content: '';
+  position: absolute;
+  left: -5px;
+  top: 6px;
+  width: 9px;
+  height: 9px;
+  background: var(--dorado);
+  border-radius: 50%;
+}
+
+.mk-timeline-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  color: var(--dorado-oscuro);
+  min-width: 56px;
+  line-height: 1.2;
+}
+
+.mk-timeline-h {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.mk-timeline-p { font-size: 14px; color: var(--gris); margin: 0; }
+
+/* === STATS CARDS === */
+.mk-stat-card {
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: #fff;
+  transition: box-shadow 0.3s;
+}
+
+.mk-stat-card:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+}
+
+.mk-stat-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.5rem;
+  font-weight: 700;
+  color: var(--dorado);
+  line-height: 1;
+  margin-bottom: 6px;
+}
+
+.mk-stat-label {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+/* === SERVICE CARDS === */
+.mk-service-card {
+  border: 1px solid rgba(212, 175, 55, 0.25) !important;
+  border-radius: 0 !important;
+  transition: box-shadow 0.3s, transform 0.3s;
+  position: relative;
+  overflow: visible;
+}
+
+.mk-service-card:hover {
+  box-shadow: 0 12px 40px rgba(0,0,0,0.1);
+  transform: translateY(-4px);
+}
+
+.mk-service-dark {
+  background: var(--negro) !important;
+  border-color: transparent !important;
+  color: #fff;
+}
+
+.mk-badge-popular {
+  position: absolute;
+  top: -14px;
+  right: 24px;
+  background: var(--dorado);
+  color: #fff;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding: 5px 14px;
+  font-family: 'Jost', sans-serif;
+  font-weight: 500;
+}
+
+.mk-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 3rem;
+  font-weight: 700;
+  color: var(--dorado);
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.mk-card-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+.mk-card-text { font-size: 14px; line-height: 1.7; color: var(--gris); }
+
+.mk-feature-list li {
+  font-size: 13px;
+  padding: 4px 0;
+  color: var(--gris);
+}
+
+.mk-service-dark .mk-feature-list li { color: #bbb; }
+
+/* Accordion personalizado */
+.mk-accordion .accordion-item {
+  border: none !important;
+  border-top: 1px solid rgba(212,175,55,0.2) !important;
+  background: transparent !important;
+}
+
+.mk-accordion-btn {
+  font-size: 13px !important;
+  color: var(--dorado) !important;
+  background: transparent !important;
+  padding: 10px 0 !important;
+  box-shadow: none !important;
+  letter-spacing: 0.03em;
+}
+
+.mk-accordion-btn:not(.collapsed) {
+  color: var(--dorado-oscuro) !important;
+  background: transparent !important;
+}
+
+.mk-accordion-btn::after {
+  filter: invert(72%) sepia(42%) saturate(600%) hue-rotate(5deg) brightness(90%);
+}
+
+.mk-accordion-body {
+  font-size: 13px;
+  color: var(--gris);
+  padding: 0 0 12px 0 !important;
+}
+
+.mk-accordion-dark .accordion-item {
+  border-top-color: rgba(255,255,255,0.1) !important;
+}
+
+.mk-accordion-btn-dark { color: var(--dorado) !important; }
+
+/* === GALERÍA / CAROUSEL === */
+.mk-carousel-inner {
+  border-radius: 0 !important;
+  overflow: hidden;
+}
+
+.mk-carousel-placeholder {
+  height: 420px;
+  background: #1a1a1a;
+  width: 100%;
+}
+
+.mk-carousel-img {
+  height: 600px;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: #111;
+}
+
+.mk-carousel-indicators [data-bs-target] {
+  background-color: var(--dorado) !important;
+  width: 24px !important;
+  height: 2px !important;
+  border-radius: 0 !important;
+  opacity: 0.4 !important;
+}
+
+.mk-carousel-indicators .active {
+  opacity: 1 !important;
+}
+
+.mk-carousel-ctrl {
+  width: 48px !important;
+  opacity: 0.7 !important;
+}
+
+/* === MINIATURAS GALERÍA === */
+.mk-thumb-img {
+  width: 100%;
+  height: 160px;        /* un poco más de altura */
+  object-fit: cover;
+  object-position: center top;  /* enfoca la parte superior donde suele estar la acción */
+  display: block;
+  cursor: pointer;
+  transition: opacity 0.2s, transform 0.2s;
+}
+
+.mk-thumb-img:hover {
+  opacity: 0.85;
+  transform: scale(1.02);
+}
+
+/* === TESTIMONIOS === */
+.mk-testimonial-card {
+  border: 1px solid rgba(212, 175, 55, 0.18) !important;
+  border-radius: 0 !important;
+  transition: box-shadow 0.3s;
+}
+
+.mk-testimonial-card:hover {
+  box-shadow: 0 8px 28px rgba(0,0,0,0.07);
+}
+
+.mk-stars {
+  color: var(--dorado);
+  font-size: 1rem;
+  letter-spacing: 2px;
+}
+
+.mk-testimonial-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.05rem;
+  font-style: italic;
+  color: #333;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.mk-avatar {
+  width: 38px;
+  height: 38px;
+  background: var(--dorado);
+  color: #fff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.mk-client-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--negro);
+}
+
+.mk-client-event {
+  font-size: 12px;
+  color: var(--gris);
+  letter-spacing: 0.03em;
+}
+
+/* === FORMULARIO DE CONTACTO === */
+.mk-form-label {
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.mk-input {
+  border: 1px solid rgba(212, 175, 55, 0.3) !important;
+  border-radius: 0 !important;
+  background: #fff !important;
+  font-family: 'Jost', sans-serif !important;
+  font-size: 14px !important;
+  padding: 11px 16px !important;
+  color: var(--negro) !important;
+  transition: border-color 0.2s, box-shadow 0.2s !important;
+}
+
+.mk-input:focus {
+  border-color: var(--dorado) !important;
+  box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.12) !important;
+  outline: none !important;
+}
+
+.mk-input::placeholder { color: #bbb !important; }
+
+/* Info lateral de contacto */
+.mk-info-card {
+  border: 1px solid rgba(212, 175, 55, 0.2);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.mk-info-icon {
+  font-size: 1.4rem;
+  color: var(--dorado);
+  flex-shrink: 0;
+}
+
+.mk-info-title {
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 2px;
+}
+
+.mk-info-text {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--negro);
+}
+
+/* === FOOTER === */
+.mk-footer {
+  background: var(--negro);
+  color: rgba(255,255,255,0.5);
+  font-size: 13px;
+  font-family: 'Jost', sans-serif;
+  border-top: 1px solid rgba(212,175,55,0.1);
+}
+
+.mk-footer strong { color: var(--dorado); }
+
+/* === ANIMACIÓN SCROLL (fade-in-up) === */
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+}
+
+.fade-in-up.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* === GALERÍA / CAROUSEL === */
+.carousel-item {
+  position: relative;
+  overflow: hidden;
+  height: 600px;
+  background: #111; /* fallback mientras carga */
+}
+
+/* Fondo difuminado — debe estar debajo de la foto principal */
+.mk-carousel-bg {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: blur(28px) brightness(0.45) saturate(1.1);
+  transform: scale(1.18);
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Foto principal — encima del fondo */
+.mk-carousel-img {
+  position: relative;
+  z-index: 1;
+  height: 600px;
+  width: 100%;
+  object-fit: contain;
+  object-position: center;
+  background: transparent; /* importante: sin fondo propio */
+}
+/* === SECCIÓN RESERVA / CALENDARIO === */
+.mk-reserva-step { margin-bottom: 8px; }
+
+.mk-step-label {
+  font-size: 12px;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  color: var(--gris);
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.mk-step-num {
+  width: 26px;
+  height: 26px;
+  background: var(--dorado);
+  color: #fff;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 12px;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* Calendario */
+.mk-calendario {
+  border: 1px solid rgba(212,175,55,0.25);
+  padding: 24px;
+  background: #fff;
+}
+
+.mk-cal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.mk-cal-mes {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.3rem;
+  font-weight: 600;
+  color: var(--negro);
+  text-transform: capitalize;
+}
+
+.mk-cal-nav {
+  background: none;
+  border: 1px solid rgba(212,175,55,0.4);
+  color: var(--dorado);
+  width: 34px;
+  height: 34px;
+  font-size: 1.3rem;
+  cursor: pointer;
+  line-height: 1;
+  transition: background 0.2s, color 0.2s;
+}
+
+.mk-cal-nav:hover {
+  background: var(--dorado);
+  color: #fff;
+}
+
+.mk-cal-dias-semana {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  text-align: center;
+  margin-bottom: 8px;
+}
+
+.mk-cal-dias-semana span {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--gris);
+  padding: 4px 0;
+}
+
+.mk-cal-grid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.mk-cal-dia {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition: all 0.2s;
+  background: none;
+  color: var(--negro);
+}
+
+.mk-cal-dia:hover:not(.disabled):not(.ocupado) {
+  border-color: var(--dorado);
+  color: var(--dorado);
+}
+
+.mk-cal-dia.selected {
+  background: var(--dorado);
+  color: #fff !important;
+  border-color: var(--dorado);
+}
+
+.mk-cal-dia.disabled {
+  color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.mk-cal-dia.ocupado {
+  color: #ccc;
+  cursor: not-allowed;
+  pointer-events: none;
+  text-decoration: line-through;
+}
+
+.mk-cal-dia.hoy {
+  font-weight: 700;
+  color: var(--dorado);
+}
+
+/* Precio display */
+.mk-precio-display {
+  border: 1px solid rgba(212,175,55,0.3);
+  padding: 16px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #fff;
+}
+
+.mk-precio-label {
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--gris);
+}
+
+.mk-precio-val {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 2.2rem;
+  font-weight: 700;
+  color: var(--dorado);
+  line-height: 1;
+}
+
+/* Grid de horas */
+.mk-horas-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+}
+
+@media (max-width: 480px) {
+  .mk-horas-grid { grid-template-columns: repeat(3, 1fr); }
+}
+
+.mk-hora-btn {
+  border: 1px solid rgba(212,175,55,0.35);
+  background: #fff;
+  color: var(--negro);
+  font-family: 'Jost', sans-serif;
+  font-size: 13px;
+  padding: 10px 4px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mk-hora-btn:hover {
+  border-color: var(--dorado);
+  color: var(--dorado);
+}
+
+.mk-hora-btn.selected {
+  background: var(--dorado);
+  color: #fff;
+  border-color: var(--dorado);
+}
+
+/* Resumen */
+.mk-resumen {
+  border: 1px solid rgba(212,175,55,0.2);
+  padding: 16px 20px;
+  font-size: 14px;
+  background: #fff;
+  line-height: 2;
+}
+/* === SELECTOR DE ESTRELLAS === */
+.mk-star-picker {
+  display: flex;
+  gap: 6px;
+  font-size: 1.8rem;
+  cursor: pointer;
+}
+
+.mk-star-pick {
+  color: #ddd;
+  transition: color 0.15s;
+  line-height: 1;
+}
+
+.mk-star-pick.active { color: var(--dorado); }
+
+.mk-resumen strong { color: var(--dorado); }
+/* === FORMULARIO TESTIMONIO === */
+.mk-testimonio-form {
+  border: 1px solid rgba(212,175,55,0.25);
+  background: #fff;
+}
+
+/* Indicador de pasos */
+.mk-pasos-indicator {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+}
+
+.mk-paso-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: rgba(212,175,55,0.25);
+  transition: background 0.3s;
+}
+
+.mk-paso-dot.active { background: var(--dorado); }
+/* === RESPONSIVE MÓVIL === */
+@media (max-width: 768px) {
+
+  /* Carousel más bajo en móvil */
+  .carousel-item,
+  .mk-carousel-img {
+    height: 320px;
+  }
+
+  /* Miniaturas más compactas */
+  .mk-thumb-img {
+    height: 110px;
+  }
+
+  /* Hero: título más pequeño y mejor centrado */
+  .mk-hero-title {
+    font-size: 2.8rem;
+  }
+
+  /* Stats: 2 columnas en móvil ya las tiene Bootstrap, solo ajustamos padding */
+  .mk-stat-card {
+    padding: 1rem !important;
+  }
+
+  .mk-stat-num {
+    font-size: 2rem;
+  }
+
+  /* Servicios: cards full width en móvil */
+  .mk-price {
+    font-size: 2.2rem;
+  }
+
+  /* Contacto: info cards más compactas */
+  .mk-info-card {
+    padding: 0.9rem !important;
+  }
+
+  /* Timeline: reducir gap */
+  .mk-timeline-item {
+    gap: 1rem !important;
+  }
+
+  .mk-timeline-year {
+    font-size: 1.2rem;
+    min-width: 44px;
+  }
+}
+
+@media (max-width: 480px) {
+
+  /* Carousel aún más compacto en teléfonos pequeños */
+  .carousel-item,
+  .mk-carousel-img {
+    height: 260px;
+  }
+.mk-btn-outline {
+  padding: 11px 24px;
+  font-size: 10px;
+  max-width: 260px;
+  display: inline-block;
+}
+/* Hero en móvil */
+/* Hero — foto vertical en móvil */
+.mk-hero {
+  background-image: url('../img/DSC07698-Editar-2.jpg');
+  background-position: center top;
+  min-height: 100svh;
+}
+  .mk-thumb-img {
+    height: 90px;
+  }
+
+  .mk-hero-title {
+    font-size: 2.2rem;
+  }
+}
