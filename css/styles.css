@@ -747,10 +747,13 @@ body {
   color: #fff;
   border-color: var(--dorado);
 }
+.mk-service-card {
+  overflow: visible !important;
+}
 .mk-card-num {
   position: absolute;
-  top: -18px;
-  left: -18px;
+  top: 16px;
+  left: 16px;
   width: 36px;
   height: 36px;
   border-radius: 50%;
