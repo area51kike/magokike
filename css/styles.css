@@ -752,12 +752,13 @@ body {
 }
 .mk-card-num {
   position: absolute;
-  top: 16px;
-  right: 16px;
+  top: 12px;
+  right: 20px;
+  z-index: 0;
   font-family: 'Cormorant Garamond', serif;
   font-size: 4rem;
   font-weight: 700;
-  color: rgba(212,175,55,0.2);
+  color: rgba(212,175,55,0.5);
   line-height: 1;
 }
 /* Resumen */
