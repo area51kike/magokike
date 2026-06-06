@@ -29,13 +29,20 @@
   </div>
   <script>
     const SUPABASE_FUNCTION_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co/functions/v1/confirmar-reserva';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcHptZHdka3BlYmF4dndjaXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MTYzNjEsImV4cCI6MjA5NjI5MjM2MX0.n-KhXSGaMINWxo7yh5HZyNZevA7lCvKV65QhROGopkI';
+
     async function confirmar() {
       const params = new URLSearchParams(window.location.search);
       const id = params.get('id');
       const contenido = document.getElementById('contenido');
       if (!id) { contenido.innerHTML = '<p class="mk-error">ID de reserva no encontrado.</p>'; return; }
       try {
-        const res = await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}`);
+        const res = await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}`, {
+          headers: {
+            'Authorization': `Bearer ${ANON_KEY}`,
+            'apikey': ANON_KEY
+          }
+        });
         const data = await res.json();
         if (!res.ok || data.error) { contenido.innerHTML = '<p class="mk-error">Error al confirmar. Puede que ya estuviera confirmada.</p>'; return; }
         const { nombre, fecha, hora_inicio, tipo_show, duracion, precio_total, telefono } = data;
