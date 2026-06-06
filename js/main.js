@@ -100,8 +100,11 @@ function preseleccionarShow(tipo) {
       data.forEach(r => {
         const inicioMin      = horaAMinutos(r.hora_inicio);
         const finMin         = inicioMin + parseInt(r.duracion);
-        const bloqueadoDesde = inicioMin - 120;
-        const bloqueadoHasta = finMin + 120;
+        // Redondear fin al siguiente bloque de hora completa
+        const finRedondeado  = Math.ceil(finMin / 60) * 60;
+        // 1 hora de buffer antes (preparación) y 1 hora después (traslado)
+        const bloqueadoDesde = inicioMin - 60;
+        const bloqueadoHasta = finRedondeado + 60;
 
         if (!HORAS_OCUPADAS[r.fecha]) HORAS_OCUPADAS[r.fecha] = [];
 
