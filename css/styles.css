@@ -752,11 +752,12 @@ body {
 }
 .mk-card-num {
   position: absolute;
-  top: 12px;
-  right: 20px;
+  top: -10px;
+  left: 20px;
+  right: auto;
   z-index: 0;
   font-family: 'Cormorant Garamond', serif;
-  font-size: 4rem;
+  font-size: 6rem;
   font-weight: 700;
   color: rgba(212,175,55,0.5);
   line-height: 1;
