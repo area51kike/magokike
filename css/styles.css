@@ -749,7 +749,7 @@ body {
 }
 .mk-card-num {
   position: absolute;
-  top: 16px;
+  top: -18px;
   left: 16px;
   width: 36px;
   height: 36px;
