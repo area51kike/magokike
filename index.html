@@ -24,7 +24,7 @@
   <!-- NAVBAR -->
   <nav class="navbar navbar-expand-lg navbar-light mk-navbar fixed-top">
     <div class="container">
-      <a class="navbar-brand mk-brand" href="#"> Mago Kike</a>
+      <a class="navbar-brand mk-brand" href="#inicio"> Mago Kike</a>
       <button class="navbar-toggler mk-toggler" type="button"
               data-bs-toggle="collapse" data-bs-target="#navbarNav"
               aria-controls="navbarNav" aria-expanded="false"
@@ -114,7 +114,6 @@
   </section>
 
   <!-- SERVICIOS -->
-  <!-- SERVICIOS -->
 <section class="py-5 bg-white" id="servicios">
   <div class="container py-5">
     <div class="text-center mb-5">
@@ -128,7 +127,7 @@
   <div class="card mk-service-card mk-service-dark h-100 p-4">
   <div class="mk-card-num">01</div>
   <div class="card-body" style="position:relative;z-index:1;">
-      <div class="mk-price" style="font-size:1.3rem;">Consulta por los precios según tu evento</div>
+      <div class="mk-price mk-price-consulta">Consulta por los precios según tu evento</div>
       <h4 class="mk-card-title">Magia de cerca</h4>
       <p class="mk-card-text">Trucos con cartas entre tus invitados. Ideal para cócteles y reuniones íntimas.</p>
       <ul class="mk-feature-list list-unstyled mb-4">
@@ -162,10 +161,10 @@
     <div class="mk-badge-popular">Más popular</div>
     <div class="mk-card-num">02</div>
     <div class="card-body" style="position:relative;z-index:1;">
-     <div class="mk-price" style="font-size:1.3rem;">Consulta por los precios según tu evento</div>
+     <div class="mk-price mk-price-consulta">Consulta por los precios según tu evento</div>
       <h4 class="mk-card-title">Show escénico</h4>
-      <p class="mk-card-text" style="color:#ccc;">Espectáculo completo con escenario e ilusiones de gran formato. Perfecto para bodas y eventos corporativos. Solo necesito una bocina — el micrófono lo pongo yo.</p>
-      <ul class="mk-feature-list list-unstyled mb-4" style="color:#ccc;">
+      <p class="mk-card-text mk-card-text--light">Espectáculo completo con escenario e ilusiones de gran formato. Perfecto para bodas y eventos corporativos. Solo necesito una bocina — el micrófono lo pongo yo.</p>
+      <ul class="mk-feature-list list-unstyled mb-4 mk-feature-list--light">
         <li><i class="bi bi-check2 text-warning me-2"></i>Desde 30 min de show continuo</li>
         <li><i class="bi bi-check2 text-warning me-2"></i>Para cualquier cantidad de personas</li>
         <li><i class="bi bi-check2 text-warning me-2"></i>Micrófono incluido, bocina a coordinar con el cliente</li>
@@ -203,19 +202,19 @@
           <!-- Slide 1 -->
           <div class="carousel-item active">
             <img src="img/IMG-20231206-WA0013.jpg" class="mk-carousel-bg" alt="">
-            <img src="img/IMG-20231206-WA0013.jpg" class="d-block w-100 mk-carousel-img" alt="Show de magia">
+            <img src="img/IMG-20231206-WA0013.jpg" class="d-block w-100 mk-carousel-img" data-lightbox alt="Show de magia">
           </div>
 
           <!-- Slide 2 -->
           <div class="carousel-item">
             <img src="img/0M9A9831.jpg" class="mk-carousel-bg" alt="">
-            <img src="img/0M9A9831.jpg" class="d-block w-100 mk-carousel-img" alt="Show de magia">
+            <img src="img/0M9A9831.jpg" class="d-block w-100 mk-carousel-img" data-lightbox alt="Show de magia">
           </div>
 
           <!-- Slide 3 -->
           <div class="carousel-item">
             <img src="img/0M9A9750.jpg" class="mk-carousel-bg" alt="">
-            <img src="img/0M9A9750.jpg" class="d-block w-100 mk-carousel-img" alt="Show de magia">
+            <img src="img/0M9A9750.jpg" class="d-block w-100 mk-carousel-img" data-lightbox alt="Show de magia">
           </div>
 
         </div>
@@ -229,20 +228,30 @@
       </div>
 
       <!-- Grid de miniaturas -->
-      <!-- Grid de miniaturas -->
 <div class="row g-3 mt-2">
   <div class="col-6 col-md-3">
-    <img src="img/IMG_20260121_170657_872.jpg" class="mk-thumb-img" alt="Show de magia">
+    <img src="img/IMG_20260121_170657_872.jpg" class="mk-thumb-img" alt="Show de magia" data-lightbox>
   </div>
   <div class="col-6 col-md-3">
-    <img src="img/IMG_20251123_112118951.jpg" class="mk-thumb-img" alt="Show de magia">
+    <img src="img/IMG_20251123_112118951.jpg" class="mk-thumb-img" alt="Show de magia" data-lightbox>
   </div>
   <div class="col-6 col-md-3">
-    <img src="img/DSC06537.JPG" class="mk-thumb-img" alt="Show de magia">
+    <img src="img/DSC06537.JPG" class="mk-thumb-img" alt="Show de magia" data-lightbox>
   </div>
   <div class="col-6 col-md-3">
-    <img src="img/0M9A9773.JPG" class="mk-thumb-img" alt="Show de magia">
+    <img src="img/0M9A9773.JPG" class="mk-thumb-img" alt="Show de magia" data-lightbox>
   </div>
+</div>
+
+<!-- Lightbox -->
+<div id="mkLightbox" class="mk-lightbox" role="dialog" aria-modal="true">
+  <button class="mk-lb-close" id="mkLbClose" aria-label="Cerrar">✕</button>
+  <button class="mk-lb-nav mk-lb-prev" id="mkLbPrev" aria-label="Anterior">&#8249;</button>
+  <div class="mk-lb-stage">
+    <img id="mkLbImg" src="" alt="Foto del show" class="mk-lb-img">
+  </div>
+  <button class="mk-lb-nav mk-lb-next" id="mkLbNext" aria-label="Siguiente">&#8250;</button>
+  <div class="mk-lb-dots" id="mkLbDots"></div>
 </div>
 
     </div>
