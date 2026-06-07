@@ -2,7 +2,6 @@
 // MAGO KIKE — main.js
 // ============================================================
 
-// --- Configuración Supabase (compartida por todos los módulos) ---
 const SUPABASE_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co';
 const SUPABASE_KEY = 'sb_publishable_T1ebtti-F2piq1_5BFs-fg_8xgqvUyL';
 
@@ -52,11 +51,6 @@ function preseleccionarShow(tipo) {
   const OCUPADOS = [];
   const HORAS_OCUPADAS = {};
 
-  const PRECIOS = {
-    cerca:    { 30: 40, 45: 60, 60: 80, 90: 130 },
-    escenico: { 30: 50, 45: 70, 60: 90, 90: 130 },
-  };
-
   const HORAS = [
     '8:00 AM','9:00 AM','10:00 AM','11:00 AM','12:00 PM',
     '1:00 PM','2:00 PM','3:00 PM','4:00 PM','5:00 PM','6:00 PM'
@@ -100,9 +94,7 @@ function preseleccionarShow(tipo) {
       data.forEach(r => {
         const inicioMin      = horaAMinutos(r.hora_inicio);
         const finMin         = inicioMin + parseInt(r.duracion);
-        // Redondear fin al siguiente bloque de hora completa
         const finRedondeado  = Math.ceil(finMin / 60) * 60;
-        // 1 hora de buffer antes (preparación) y 1 hora después (traslado)
         const bloqueadoDesde = inicioMin - 60;
         const bloqueadoHasta = finRedondeado + 60;
 
@@ -117,7 +109,6 @@ function preseleccionarShow(tipo) {
           }
         });
 
-        // Bloquear fecha completa solo si todas las horas están ocupadas
         if (HORAS_OCUPADAS[r.fecha].length >= HORAS.length) {
           if (!OCUPADOS.includes(r.fecha)) OCUPADOS.push(r.fecha);
         }
@@ -170,7 +161,6 @@ function preseleccionarShow(tipo) {
     }, 200);
   }
 
-
   document.getElementById('btnPaso3').addEventListener('click', () => {
     const paso3 = document.getElementById('paso3');
     paso3.classList.remove('d-none');
@@ -221,12 +211,6 @@ function preseleccionarShow(tipo) {
     setTimeout(() => formReserva.scrollIntoView({ behavior: 'smooth', block: 'nearest' }), 100);
   }
 
-  // --- Guardamos nombre para animación ---
-  let nombreGuardado = '';
-  document.getElementById('rNombre').addEventListener('input', () => {
-    nombreGuardado = document.getElementById('rNombre').value.trim().split(' ')[0];
-  });
-
   // --- Helpers de validación visual por campo ---
   function setFieldError(fieldId, msg) {
     const el = document.getElementById(fieldId);
@@ -258,26 +242,25 @@ function preseleccionarShow(tipo) {
     const val = document.getElementById('rNombre').value.trim();
     const palabras = val.split(/\s+/).filter(p => p.length > 0);
     const soloLetras = /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/.test(val);
-    if (!val)            { setFieldError('rNombre', 'Por favor ingresa tu nombre.'); return false; }
-    if (!soloLetras)     { setFieldError('rNombre', 'Solo letras, sin números ni símbolos.'); return false; }
+    if (!val)                { setFieldError('rNombre', 'Por favor ingresa tu nombre.'); return false; }
+    if (!soloLetras)         { setFieldError('rNombre', 'Solo letras, sin números ni símbolos.'); return false; }
     if (palabras.length < 2) { setFieldError('rNombre', 'Ingresa nombre y apellido.'); return false; }
     setFieldOk('rNombre'); return true;
   }
   function validarEmail() {
     const val = document.getElementById('rEmail').value.trim();
     const ok  = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(val);
-    if (!val)  { setFieldError('rEmail', 'Por favor ingresa tu correo.'); return false; }
-    if (!ok)   { setFieldError('rEmail', 'Formato inválido. Ej: maria@gmail.com'); return false; }
+    if (!val) { setFieldError('rEmail', 'Por favor ingresa tu correo.'); return false; }
+    if (!ok)  { setFieldError('rEmail', 'Formato inválido. Ej: maria@gmail.com'); return false; }
     setFieldOk('rEmail'); return true;
   }
   function validarTelefono() {
     const val = document.getElementById('rTelefono').value.replace(/\D/g, '');
-    if (!val)          { setFieldError('rTelefono', 'Por favor ingresa tu teléfono.'); return false; }
+    if (!val)             { setFieldError('rTelefono', 'Por favor ingresa tu teléfono.'); return false; }
     if (val.length !== 8) { setFieldError('rTelefono', 'Deben ser exactamente 8 dígitos.'); return false; }
     setFieldOk('rTelefono'); return true;
   }
 
-  // Validar al salir del campo y limpiar al escribir
   document.getElementById('rNombre').addEventListener('blur', validarNombre);
   document.getElementById('rEmail').addEventListener('blur', validarEmail);
   document.getElementById('rTelefono').addEventListener('blur', validarTelefono);
@@ -356,11 +339,11 @@ function preseleccionarShow(tipo) {
         <p class="mk-exito-sub">Revisa también tu bandeja de spam.</p>
       </div>`;
     document.getElementById('mkExito').scrollIntoView({ behavior: 'smooth', block: 'center' });
-    lanzarEstrellas();
+    lanzarEstrellas('mkExito');
   }
 
-  function lanzarEstrellas() {
-    const contenedor = document.getElementById('mkExito');
+  function lanzarEstrellas(idContenedor) {
+    const contenedor = document.getElementById(idContenedor);
     contenedor.style.position = 'relative';
     contenedor.style.overflow = 'hidden';
     const simbolos = ['✦','✧','★','✶','✸'];
@@ -416,9 +399,6 @@ function preseleccionarShow(tipo) {
     'Authorization': 'Bearer ' + SUPABASE_KEY
   };
 
-  const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio',
-                 'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
-
   async function cargarTestimonios() {
     try {
       const res  = await fetch(
@@ -462,6 +442,7 @@ function preseleccionarShow(tipo) {
     }
   }
 
+  // --- Estrellas ---
   let calificacionSeleccionada = 0;
   const stars = document.querySelectorAll('.mk-star-pick');
 
@@ -470,30 +451,101 @@ function preseleccionarShow(tipo) {
       calificacionSeleccionada = parseInt(star.dataset.val);
       document.getElementById('tEstrellas').value = calificacionSeleccionada;
       actualizarEstrellas(calificacionSeleccionada);
+      clearTError('estrellas');
     });
-    star.addEventListener('mouseover', () => {
-      actualizarEstrellas(parseInt(star.dataset.val));
-    });
-    star.addEventListener('mouseout', () => {
-      actualizarEstrellas(calificacionSeleccionada);
-    });
+    star.addEventListener('mouseover', () => actualizarEstrellas(parseInt(star.dataset.val)));
+    star.addEventListener('mouseout',  () => actualizarEstrellas(calificacionSeleccionada));
   });
 
   function actualizarEstrellas(val) {
     stars.forEach((s, i) => s.classList.toggle('active', i < val));
   }
 
+  // --- Validación visual testimonios ---
+  function setTError(fieldId, msg) {
+    const el = fieldId === 'estrellas'
+      ? document.getElementById('starPicker')
+      : document.getElementById(fieldId);
+    el.classList.add('mk-input-error');
+    let hint = el.parentElement.querySelector('.mk-t-hint');
+    if (!hint) {
+      hint = document.createElement('small');
+      hint.className = 'mk-t-hint';
+      el.parentElement.appendChild(hint);
+    }
+    hint.textContent = msg;
+    hint.style.cssText = 'color:#e74c3c;font-size:11px;display:block;margin-top:4px;';
+  }
+
+  function clearTError(fieldId) {
+    const el = fieldId === 'estrellas'
+      ? document.getElementById('starPicker')
+      : document.getElementById(fieldId);
+    if (!el) return;
+    el.classList.remove('mk-input-error');
+    el.classList.add('mk-input-ok');
+    const hint = el.parentElement.querySelector('.mk-t-hint');
+    if (hint) hint.style.display = 'none';
+  }
+
+  function validarTNombre() {
+    const val = document.getElementById('tNombre').value.trim();
+    const palabras = val.split(/\s+/).filter(p => p.length > 0);
+    const soloLetras = /^[a-záéíóúüñA-ZÁÉÍÓÚÜÑ\s]+$/.test(val);
+    if (!val)                { setTError('tNombre', 'Por favor ingresa tu nombre.'); return false; }
+    if (!soloLetras)         { setTError('tNombre', 'Solo letras, sin números ni símbolos.'); return false; }
+    if (palabras.length < 2) { setTError('tNombre', 'Ingresa nombre y apellido.'); return false; }
+    clearTError('tNombre'); return true;
+  }
+
+  function validarTCiudad() {
+    const val = document.getElementById('tCiudad').value.trim();
+    if (!val) { setTError('tCiudad', 'Por favor ingresa tu ciudad.'); return false; }
+    clearTError('tCiudad'); return true;
+  }
+
+  function validarTMensaje() {
+    const val = document.getElementById('tMensaje').value.trim();
+    if (!val)            { setTError('tMensaje', 'Por favor escribe tu mensaje.'); return false; }
+    if (val.length < 20) { setTError('tMensaje', 'Cuéntanos un poco más (mínimo 20 caracteres).'); return false; }
+    clearTError('tMensaje'); return true;
+  }
+
+  function validarTEstrellas() {
+    if (calificacionSeleccionada === 0) {
+      setTError('estrellas', 'Por favor selecciona una calificación.');
+      return false;
+    }
+    clearTError('estrellas'); return true;
+  }
+
+  document.getElementById('tNombre').addEventListener('blur', validarTNombre);
+  document.getElementById('tCiudad').addEventListener('blur', validarTCiudad);
+  document.getElementById('tMensaje').addEventListener('blur', validarTMensaje);
+  ['tNombre','tCiudad','tMensaje'].forEach(id =>
+    document.getElementById(id).addEventListener('input', () => {
+      document.getElementById(id).classList.remove('mk-input-error');
+      const hint = document.getElementById(id).parentElement.querySelector('.mk-t-hint');
+      if (hint) hint.style.display = 'none';
+    })
+  );
+
   document.getElementById('btnEnviarTestimonio').addEventListener('click', async () => {
+    const okNombre    = validarTNombre();
+    const okCiudad    = validarTCiudad();
+    const okMensaje   = validarTMensaje();
+    const okEstrellas = validarTEstrellas();
+    if (!okNombre || !okCiudad || !okMensaje || !okEstrellas) return;
+
     const nombre    = document.getElementById('tNombre').value.trim();
     const evento    = document.getElementById('tEvento').value;
     const ciudad    = document.getElementById('tCiudad').value.trim();
     const mensaje   = document.getElementById('tMensaje').value.trim();
-    const estrellas = parseInt(document.getElementById('tEstrellas').value);
+    const estrellas = calificacionSeleccionada;
 
-    if (!nombre || !ciudad || !mensaje || estrellas === 0) {
-      alert('Por favor completa todos los campos y selecciona una calificación.');
-      return;
-    }
+    const btn = document.getElementById('btnEnviarTestimonio');
+    btn.disabled    = true;
+    btn.textContent = 'Enviando...';
 
     try {
       const res = await fetch(SUPABASE_URL + '/rest/v1/testimonios', {
@@ -505,26 +557,61 @@ function preseleccionarShow(tipo) {
       });
 
       if (res.ok || res.status === 201) {
-        document.getElementById('tNombre').value  = '';
-        document.getElementById('tCiudad').value  = '';
-        document.getElementById('tMensaje').value = '';
-        calificacionSeleccionada = 0;
-        document.getElementById('tEstrellas').value = 0;
-        actualizarEstrellas(0);
-        const feedback = document.getElementById('tFeedback');
-        feedback.style.display = 'block';
-        setTimeout(() => feedback.style.display = 'none', 5000);
+        mostrarExitoTestimonio(nombre.split(' ')[0]);
       } else {
-        alert('Hubo un error al enviar. Intenta de nuevo.');
+        btn.disabled    = false;
+        btn.textContent = 'Enviar testimonio';
+        setTError('tMensaje', 'Hubo un error al enviar. Intenta de nuevo.');
       }
     } catch (err) {
       console.error('Error enviando testimonio:', err);
-      alert('Hubo un error de conexión.');
+      btn.disabled    = false;
+      btn.textContent = 'Enviar testimonio';
     }
   });
 
+  function mostrarExitoTestimonio(primerNombre) {
+    const form = document.querySelector('.mk-testimonio-form');
+    form.innerHTML = `
+      <div class="mk-exito" id="mkExitoTestimonio">
+        <div class="mk-exito-simbolo">✦</div>
+        <h3 class="mk-exito-titulo">¡Gracias, ${primerNombre}!</h3>
+        <div class="mk-exito-divider"></div>
+        <p class="mk-exito-texto">Tu testimonio fue recibido y será publicado pronto.</p>
+        <p class="mk-exito-sub">Lo revisaré personalmente antes de publicarlo.</p>
+      </div>`;
+    document.getElementById('mkExitoTestimonio').scrollIntoView({ behavior: 'smooth', block: 'center' });
+    lanzarEstrellasElem('mkExitoTestimonio');
+  }
+
+  function lanzarEstrellasElem(idContenedor) {
+    const contenedor = document.getElementById(idContenedor);
+    contenedor.style.position = 'relative';
+    contenedor.style.overflow = 'hidden';
+    const simbolos = ['✦','✧','★','✶','✸'];
+    const colores  = ['#D4AF37','#fff','#C9A84C','#f5e6a3'];
+    for (let i = 0; i < 20; i++) {
+      const s = document.createElement('span');
+      s.className   = 'mk-estrella-confeti';
+      s.textContent = simbolos[Math.floor(Math.random() * simbolos.length)];
+      s.style.cssText = `
+        position:absolute;
+        left:${Math.random()*100}%;
+        top:${10 + Math.random()*80}%;
+        font-size:${10 + Math.random()*20}px;
+        color:${colores[Math.floor(Math.random()*colores.length)]};
+        opacity:0;
+        pointer-events:none;
+        animation:mkEstrellaAnim ${0.5 + Math.random()*1.2}s ease forwards;
+        animation-delay:${Math.random()*0.6}s;
+      `;
+      contenedor.appendChild(s);
+    }
+  }
+
   cargarTestimonios();
 })();
+
 /* ============================================================
    LIGHTBOX — Galería
    ============================================================ */
@@ -536,7 +623,6 @@ function preseleccionarShow(tipo) {
   const lbNext  = document.getElementById('mkLbNext');
   const lbDots  = document.getElementById('mkLbDots');
 
-  // Recolectar todas las imágenes con data-lightbox en orden visual
   function getImgs() {
     return Array.from(document.querySelectorAll('[data-lightbox]'));
   }
@@ -585,7 +671,6 @@ function preseleccionarShow(tipo) {
     }, 180);
   }
 
-  // Delegar clics en imágenes de galería
   document.addEventListener('click', e => {
     const img = e.target.closest('[data-lightbox]');
     if (!img) return;
@@ -597,12 +682,10 @@ function preseleccionarShow(tipo) {
   lbPrev.addEventListener('click', () => goTo(idx - 1));
   lbNext.addEventListener('click', () => goTo(idx + 1));
 
-  // Cerrar al hacer clic en el fondo oscuro
   lb.addEventListener('click', e => {
     if (e.target === lb) closeLightbox();
   });
 
-  // Navegación con teclado
   document.addEventListener('keydown', e => {
     if (!lb.classList.contains('active')) return;
     if (e.key === 'ArrowRight') goTo(idx + 1);
