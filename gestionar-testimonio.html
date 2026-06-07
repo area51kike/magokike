@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Testimonio — Mago Kike</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --dorado: #D4AF37; --crema: #FAFAF8; --negro: #1a1a1a; --gris: #666; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Jost', sans-serif;
+      background: var(--crema);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+    }
+    .mk-brand {
+      font-family: 'Cormorant Garamond', serif;
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: var(--negro);
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      margin-bottom: 48px;
+      display: block;
+      text-align: center;
+    }
+    .mk-card {
+      background: #fff;
+      border: 1px solid rgba(212,175,55,0.25);
+      padding: 56px 48px;
+      max-width: 460px;
+      width: 100%;
+      text-align: center;
+    }
+    .mk-simbolo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--dorado); letter-spacing: 0.3em; margin-bottom: 24px; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--negro); margin-bottom: 16px; }
+    .mk-divider { width: 40px; height: 1px; background: var(--dorado); margin: 0 auto 24px; }
+    .mk-info { font-size: 15px; color: var(--gris); line-height: 1.8; }
+    .mk-loading { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gris); font-style: italic; }
+    .mk-error { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: #c0392b; }
+    .mk-footer { margin-top: 48px; font-size: 11px; color: #bbb; letter-spacing: 0.15em; text-transform: uppercase; }
+    @media (max-width: 480px) { .mk-card { padding: 40px 24px; } }
+  </style>
+</head>
+<body>
+
+  <a class="mk-brand" href="https://area51kike.github.io/magokike">✦ Mago Kike</a>
+
+  <div class="mk-card" id="contenido">
+    <p class="mk-loading">Procesando...</p>
+  </div>
+
+  <p class="mk-footer">© 2026 Mago Kike · El Salvador</p>
+
+  <script>
+    const SUPABASE_FUNCTION_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co/functions/v1/gestionar-testimonio';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcHptZHdka3BlYmF4dndjaXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MTYzNjEsImV4cCI6MjA5NjI5MjM2MX0.n-KhXSGaMINWxo7yh5HZyNZevA7lCvKV65QhROGopkI';
+
+    async function gestionar() {
+      const params = new URLSearchParams(window.location.search);
+      const id = params.get('id');
+      const accion = params.get('accion');
+      const contenido = document.getElementById('contenido');
+
+      if (!id || !accion) {
+        contenido.innerHTML = '<p class="mk-error">Parametros invalidos.</p>';
+        return;
+      }
+
+      try {
+        const res = await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}&accion=${accion}`, {
+          headers: {
+            'Authorization': `Bearer ${ANON_KEY}`,
+            'apikey': ANON_KEY
+          }
+        });
+
+        const aprobado = accion === 'aprobar';
+        const titulo = aprobado ? 'Testimonio aprobado' : 'Testimonio rechazado';
+        const descripcion = aprobado
+          ? 'El testimonio fue publicado y ya es visible en tu sitio.'
+          : 'El testimonio fue rechazado y no sera publicado.';
+
+        if (res.ok) {
+          contenido.innerHTML = `
+            <div class="mk-simbolo">✦</div>
+            <h1>${titulo}</h1>
+            <div class="mk-divider"></div>
+            <p class="mk-info">${descripcion}</p>
+          `;
+        } else {
+          contenido.innerHTML = '<p class="mk-error">Error al procesar. Intenta de nuevo.</p>';
+        }
+
+      } catch (err) {
+        contenido.innerHTML = '<p class="mk-error">Error de conexion.</p>';
+      }
+    }
+
+    gestionar();
+  </script>
+</body>
+</html>
