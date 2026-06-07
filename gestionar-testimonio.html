@@ -1,49 +1,69 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Gestión de Testimonio — Mago Kike</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
+  <style>
+    :root { --dorado: #D4AF37; --crema: #FAFAF8; --negro: #1a1a1a; --gris: #666; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'Jost', sans-serif; background: var(--crema); min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 40px 20px; }
+    .mk-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.1rem; font-weight: 600; color: var(--negro); letter-spacing: 0.05em; text-decoration: none; margin-bottom: 48px; display: block; text-align: center; }
+    .mk-card { background: #fff; border: 1px solid rgba(212,175,55,0.25); padding: 56px 48px; max-width: 460px; width: 100%; text-align: center; }
+    .mk-simbolo { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--dorado); letter-spacing: 0.3em; margin-bottom: 24px; }
+    h1 { font-family: 'Cormorant Garamond', serif; font-size: 2rem; font-weight: 600; color: var(--negro); margin-bottom: 16px; }
+    .mk-divider { width: 40px; height: 1px; background: var(--dorado); margin: 0 auto 24px; }
+    .mk-info { font-size: 15px; color: var(--gris); line-height: 1.8; }
+    .mk-loading { font-family: 'Cormorant Garamond', serif; font-size: 1.2rem; color: var(--gris); font-style: italic; }
+    .mk-footer { margin-top: 48px; font-size: 11px; color: #bbb; letter-spacing: 0.15em; text-transform: uppercase; }
+    @media (max-width: 480px) { .mk-card { padding: 40px 24px; } }
+  </style>
+</head>
+<body>
+  <a class="mk-brand" href="https://area51kike.github.io/magokike">✦ Mago Kike</a>
+  <div class="mk-card" id="contenido">
+    <p class="mk-loading">Procesando...</p>
+  </div>
+  <p class="mk-footer">© 2026 Mago Kike · El Salvador</p>
+  <script>
+    const SUPABASE_FUNCTION_URL = 'https://lopzmdwdkpebaxvwciwc.supabase.co/functions/v1/gestionar-testimonio';
+    const ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImxvcHptZHdka3BlYmF4dndjaXdjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA3MTYzNjEsImV4cCI6MjA5NjI5MjM2MX0.n-KhXSGaMINWxo7yh5HZyNZevA7lCvKV65QhROGopkI';
 
-const CORS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type, Authorization, apikey"
-};
+    async function gestionar() {
+      const params = new URLSearchParams(window.location.search);
+      const id     = params.get('id');
+      const accion = params.get('accion');
+      const contenido = document.getElementById('contenido');
 
-serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response(null, { status: 204, headers: CORS });
-  }
+      if (!id || !accion) {
+        contenido.innerHTML = '<p style="color:#c0392b;font-family:serif;">Parámetros inválidos.</p>';
+        return;
+      }
 
-  try {
-    const url = new URL(req.url);
-    const id     = url.searchParams.get("id");
-    const accion = url.searchParams.get("accion");
+      const aprobado    = accion === 'aprobar';
+      const titulo      = aprobado ? 'Testimonio aprobado' : 'Testimonio rechazado';
+      const descripcion = aprobado
+        ? 'El testimonio fue publicado y ya es visible en tu sitio.'
+        : 'El testimonio fue rechazado y no será publicado.';
 
-    if (!id || !accion) {
-      return new Response(JSON.stringify({ error: "Faltan parametros" }), {
-        status: 400, headers: { "Content-Type": "application/json", ...CORS }
-      });
+      contenido.innerHTML = `
+        <div class="mk-simbolo">✦</div>
+        <h1>${titulo}</h1>
+        <div class="mk-divider"></div>
+        <p class="mk-info">${descripcion}</p>
+      `;
+
+      try {
+        await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}&accion=${accion}`, {
+          headers: { 'Authorization': `Bearer ${ANON_KEY}`, 'apikey': ANON_KEY }
+        });
+      } catch (err) {
+        console.error(err);
+      }
     }
 
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SERVICE_ROLE_KEY")!
-    );
-
-    const aprobado = accion === "aprobar";
-
-    const { error } = await supabase
-      .from("testimonios")
-      .update({ aprobado })
-      .eq("id", id);
-
-    if (error) throw error;
-
-    return new Response(JSON.stringify({ ok: true }), {
-      status: 200, headers: { "Content-Type": "application/json", ...CORS }
-    });
-
-  } catch (err) {
-    return new Response(JSON.stringify({ error: err.message }), {
-      status: 500, headers: { "Content-Type": "application/json", ...CORS }
-    });
-  }
-});
+    gestionar();
+  </script>
+</body>
+</html>
