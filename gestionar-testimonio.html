@@ -72,33 +72,30 @@
         return;
       }
 
+      const aprobado = accion === 'aprobar';
+      const titulo = aprobado ? 'Testimonio aprobado' : 'Testimonio rechazado';
+      const descripcion = aprobado
+        ? 'El testimonio fue publicado y ya es visible en tu sitio.'
+        : 'El testimonio fue rechazado y no sera publicado.';
+
+      // Mostrar resultado inmediatamente
+      contenido.innerHTML = `
+        <div class="mk-simbolo">✦</div>
+        <h1>${titulo}</h1>
+        <div class="mk-divider"></div>
+        <p class="mk-info">${descripcion}</p>
+      `;
+
+      // Llamar a la función en segundo plano
       try {
-        const res = await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}&accion=${accion}`, {
+        await fetch(`${SUPABASE_FUNCTION_URL}?id=${id}&accion=${accion}`, {
           headers: {
             'Authorization': `Bearer ${ANON_KEY}`,
             'apikey': ANON_KEY
           }
         });
-
-        const aprobado = accion === 'aprobar';
-        const titulo = aprobado ? 'Testimonio aprobado' : 'Testimonio rechazado';
-        const descripcion = aprobado
-          ? 'El testimonio fue publicado y ya es visible en tu sitio.'
-          : 'El testimonio fue rechazado y no sera publicado.';
-
-        if (res.ok) {
-          contenido.innerHTML = `
-            <div class="mk-simbolo">✦</div>
-            <h1>${titulo}</h1>
-            <div class="mk-divider"></div>
-            <p class="mk-info">${descripcion}</p>
-          `;
-        } else {
-          contenido.innerHTML = '<p class="mk-error">Error al procesar. Intenta de nuevo.</p>';
-        }
-
       } catch (err) {
-        contenido.innerHTML = '<p class="mk-error">Error de conexion.</p>';
+        console.error(err);
       }
     }
 
