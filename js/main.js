@@ -499,10 +499,10 @@ function preseleccionarShow(tipo) {
   }
 
   function validarTCiudad() {
-    const val = document.getElementById('tCiudad').value.trim();
-    if (!val) { setTError('tCiudad', 'Por favor ingresa tu ciudad.'); return false; }
-    clearTError('tCiudad'); return true;
-  }
+  const val = document.getElementById('tCiudad').value;
+  if (!val) { setTError('tCiudad', 'Por favor selecciona tu departamento.'); return false; }
+  clearTError('tCiudad'); return true;
+}
 
   function validarTMensaje() {
     const val = document.getElementById('tMensaje').value.trim();
@@ -520,15 +520,16 @@ function preseleccionarShow(tipo) {
   }
 
   document.getElementById('tNombre').addEventListener('blur', validarTNombre);
-  document.getElementById('tCiudad').addEventListener('blur', validarTCiudad);
-  document.getElementById('tMensaje').addEventListener('blur', validarTMensaje);
-  ['tNombre','tCiudad','tMensaje'].forEach(id =>
-    document.getElementById(id).addEventListener('input', () => {
-      document.getElementById(id).classList.remove('mk-input-error');
-      const hint = document.getElementById(id).parentElement.querySelector('.mk-t-hint');
-      if (hint) hint.style.display = 'none';
-    })
-  );
+document.getElementById('tCiudad').addEventListener('change', validarTCiudad);
+document.getElementById('tMensaje').addEventListener('blur', validarTMensaje);
+
+['tNombre','tMensaje'].forEach(id =>
+  document.getElementById(id).addEventListener('input', () => {
+    document.getElementById(id).classList.remove('mk-input-error');
+    const hint = document.getElementById(id).parentElement.querySelector('.mk-t-hint');
+    if (hint) hint.style.display = 'none';
+  })
+);
 
   document.getElementById('btnEnviarTestimonio').addEventListener('click', async () => {
     const okNombre    = validarTNombre();
