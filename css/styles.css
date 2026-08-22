@@ -606,6 +606,8 @@ body {
   border: 1px solid rgba(212,175,55,0.25);
   padding: 24px;
   background: #fff;
+  max-width: 440px;
+  margin: 0 auto;
 }
 
 .mk-cal-header {
@@ -681,11 +683,23 @@ body {
 
 .mk-cal-dia-badge {
   position: absolute;
-  top: -2px;
-  right: -2px;
-  font-size: 10px;
+  top: -6px;
+  right: -6px;
+  font-size: 13px;
   line-height: 1;
   pointer-events: none;
+  background: #fff;
+  border-radius: 50%;
+  width: 18px;
+  height: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 1px rgba(212,175,55,0.35);
+}
+
+.mk-cal-dia.ocupado .mk-cal-dia-badge--full {
+  box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
 }
 
 .mk-cal-dia.parcial {
