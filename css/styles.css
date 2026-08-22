@@ -662,6 +662,7 @@ body {
 }
 
 .mk-cal-dia {
+  position: relative;
   aspect-ratio: 1;
   display: flex;
   align-items: center;
@@ -672,6 +673,23 @@ body {
   transition: all 0.2s;
   background: none;
   color: var(--negro);
+}
+
+.mk-cal-dia-num {
+  pointer-events: none;
+}
+
+.mk-cal-dia-badge {
+  position: absolute;
+  top: -2px;
+  right: -2px;
+  font-size: 10px;
+  line-height: 1;
+  pointer-events: none;
+}
+
+.mk-cal-dia.parcial {
+  border-color: rgba(212,175,55,0.4);
 }
 
 .mk-cal-dia:hover:not(.disabled):not(.ocupado) {
