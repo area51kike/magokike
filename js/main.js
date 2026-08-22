@@ -145,7 +145,11 @@ function preseleccionarShow(tipo) {
         btn.classList.add('disabled');
       } else if (OCUPADOS.includes(dateStr)) {
         btn.classList.add('ocupado');
-        btn.title = 'Fecha no disponible';
+        btn.title = 'Día completo, sin horas disponibles';
+        const badge = document.createElement('span');
+        badge.className = 'mk-cal-dia-badge mk-cal-dia-badge--full';
+        badge.textContent = '🔒';
+        btn.appendChild(badge);
       } else {
         if (thisDate.getTime() === today.getTime()) btn.classList.add('hoy');
         if (selectedDate === dateStr) btn.classList.add('selected');
