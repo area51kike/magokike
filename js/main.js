@@ -132,7 +132,12 @@ function preseleccionarShow(tipo) {
     for (let d = 1; d <= daysInMonth; d++) {
       const btn = document.createElement('button');
       btn.className = 'mk-cal-dia';
-      btn.textContent = d;
+
+      const numSpan = document.createElement('span');
+      numSpan.className = 'mk-cal-dia-num';
+      numSpan.textContent = d;
+      btn.appendChild(numSpan);
+
       const thisDate = new Date(viewYear, viewMonth, d);
       const dateStr  = thisDate.toISOString().split('T')[0];
 
@@ -144,6 +149,19 @@ function preseleccionarShow(tipo) {
       } else {
         if (thisDate.getTime() === today.getTime()) btn.classList.add('hoy');
         if (selectedDate === dateStr) btn.classList.add('selected');
+
+        // Día con alguna reserva (pero no todas las horas ocupadas):
+        // se marca con un emoji, sin bloquear el día para agendar el resto de horas.
+        const horasBloqueadas = HORAS_OCUPADAS[dateStr] || [];
+        if (horasBloqueadas.length > 0) {
+          btn.classList.add('parcial');
+          btn.title = 'Ya hay una reserva ese día, pero quedan horas libres';
+          const badge = document.createElement('span');
+          badge.className = 'mk-cal-dia-badge';
+          badge.textContent = '🔖';
+          btn.appendChild(badge);
+        }
+
         btn.addEventListener('click', () => selectDate(dateStr, btn));
       }
       grid.appendChild(btn);
