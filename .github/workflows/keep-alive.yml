@@ -2,8 +2,8 @@ name: Supabase Keep Alive
 
 on:
   schedule:
-    - cron: '0 12 */3 * *'  # corre cada 3 días a las 12:00 UTC
-  workflow_dispatch:         # te deja correrlo a mano desde GitHub también
+    - cron: '0 12 */3 * *'  # corre cada 3 dias a las 12:00 UTC
+  workflow_dispatch:         # permite correrlo a mano desde la pestana Actions
 
 jobs:
   ping-supabase:
@@ -11,6 +11,6 @@ jobs:
     steps:
       - name: Ping Supabase
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/" \
+          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/testimonios?select=id&limit=1" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
