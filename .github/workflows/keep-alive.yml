@@ -1,5 +1,4 @@
 name: Supabase Keep Alive
-
 on:
   schedule:
     - cron: '0 12 */3 * *'  # corre cada 3 dias a las 12:00 UTC
@@ -9,8 +8,18 @@ jobs:
   ping-supabase:
     runs-on: ubuntu-latest
     steps:
-      - name: Ping Supabase
+      - name: Ping Supabase (INSERT)
         run: |
-          curl -X GET "${{ secrets.SUPABASE_URL }}/rest/v1/testimonios?select=id&limit=1" \
+          curl -X POST "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive_logs" \
+            -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}" \
+            -H "Content-Type: application/json" \
+            -H "Prefer: return=minimal" \
+            -d '{}'
+
+      - name: Limpiar logs viejos (mas de 7 dias)
+        run: |
+          FECHA_LIMITE=$(date -u -d '7 days ago' +%Y-%m-%dT%H:%M:%S)
+          curl -X DELETE "${{ secrets.SUPABASE_URL }}/rest/v1/keepalive_logs?created_at=lt.${FECHA_LIMITE}" \
             -H "apikey: ${{ secrets.SUPABASE_ANON_KEY }}" \
             -H "Authorization: Bearer ${{ secrets.SUPABASE_ANON_KEY }}"
