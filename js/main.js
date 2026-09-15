@@ -421,15 +421,19 @@ function preseleccionarShow(tipo) {
     'Authorization': 'Bearer ' + SUPABASE_KEY
   };
 
-  async function cargarTestimonios() {
+   async function cargarTestimonios() {
     try {
       const res  = await fetch(
         SUPABASE_URL + '/rest/v1/testimonios?aprobado=eq.true&order=creado_at.desc',
         { headers: HEADERS }
       );
       const data = await res.json();
-      const grid     = document.getElementById('testimoniosGrid');
-      const cargando = document.getElementById('testimoniosCargando');
+      const grid      = document.getElementById('testimoniosGrid');
+      const cargando  = document.getElementById('testimoniosCargando');
+      const pagWrap   = document.getElementById('testimoniosPagination');
+      const prevBtn   = document.getElementById('testPrev');
+      const nextBtn   = document.getElementById('testNext');
+      const pageInfo  = document.getElementById('testPageInfo');
 
       if (!data.length) {
         cargando.innerHTML = '<p style="font-size:14px;color:#bbb;">Aún no hay testimonios publicados. ¡Sé el primero!</p>';
@@ -437,28 +441,59 @@ function preseleccionarShow(tipo) {
       }
 
       cargando.remove();
-      data.forEach(t => {
-        const inicial       = t.nombre.charAt(0).toUpperCase();
-        const cal           = t.calificacion || 5;
-        const estrellasHTML = '★'.repeat(cal) + '☆'.repeat(5 - cal);
-        const col           = document.createElement('div');
-        col.className       = 'col-md-4';
-        col.innerHTML = `
-          <div class="card mk-testimonial-card h-100 p-4">
-            <div class="card-body">
-              <div class="mk-stars mb-3">${estrellasHTML}</div>
-              <p class="mk-testimonial-text">"${t.mensaje}"</p>
-            </div>
-            <div class="card-footer bg-transparent border-0 d-flex align-items-center gap-3">
-              <div class="mk-avatar">${inicial}</div>
-              <div>
-                <div class="mk-client-name">${t.nombre}</div>
-                <div class="mk-client-event">${t.tipo_evento} · ${t.ciudad}</div>
+
+      const POR_PAGINA   = 3;
+      const totalPaginas = Math.ceil(data.length / POR_PAGINA);
+      let paginaActual   = 0;
+
+      function renderPagina(scroll) {
+        grid.innerHTML = '';
+        const inicio = paginaActual * POR_PAGINA;
+        const items  = data.slice(inicio, inicio + POR_PAGINA);
+
+        items.forEach(t => {
+          const inicial       = t.nombre.charAt(0).toUpperCase();
+          const cal           = t.calificacion || 5;
+          const estrellasHTML = '★'.repeat(cal) + '☆'.repeat(5 - cal);
+          const col           = document.createElement('div');
+          col.className       = 'col-md-4';
+          col.innerHTML = `
+            <div class="card mk-testimonial-card h-100 p-4">
+              <div class="card-body">
+                <div class="mk-stars mb-3">${estrellasHTML}</div>
+                <p class="mk-testimonial-text">"${t.mensaje}"</p>
               </div>
-            </div>
-          </div>`;
-        grid.appendChild(col);
+              <div class="card-footer bg-transparent border-0 d-flex align-items-center gap-3">
+                <div class="mk-avatar">${inicial}</div>
+                <div>
+                  <div class="mk-client-name">${t.nombre}</div>
+                  <div class="mk-client-event">${t.tipo_evento} · ${t.ciudad}</div>
+                </div>
+              </div>
+            </div>`;
+          grid.appendChild(col);
+        });
+
+        if (totalPaginas > 1) {
+          pagWrap.style.display = 'flex';
+          pageInfo.textContent  = `Página ${paginaActual + 1} de ${totalPaginas}`;
+          prevBtn.disabled = paginaActual === 0;
+          nextBtn.disabled = paginaActual === totalPaginas - 1;
+        }
+
+        if (scroll) {
+          grid.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+
+      prevBtn.addEventListener('click', () => {
+        if (paginaActual > 0) { paginaActual--; renderPagina(true); }
       });
+      nextBtn.addEventListener('click', () => {
+        if (paginaActual < totalPaginas - 1) { paginaActual++; renderPagina(true); }
+      });
+
+      renderPagina(false);
     } catch (err) {
       console.error('Error cargando testimonios:', err);
     }
